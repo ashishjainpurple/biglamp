@@ -1,25 +1,90 @@
-
 <!DOCTYPE html>
 <html>
-<head>
-  <title>WebAR Lamp</title>
-  <script src="https://cdn.8thwall.com/web/aframe/8frame.min.js"></script>
-  <script src="script.js"></script>
-  <style>
-    body { margin: 0; overflow: hidden; }
-    #glow { position: absolute; top: 30%; left: 45%; width: 100px; height: 100px;
-            background: radial-gradient(circle, rgba(255,255,100,0.7), transparent 70%);
-            border-radius: 50%; display: none; pointer-events: none; }
-  </style>
-</head>
-<body>
-  <div id="glow"></div>
-  <audio id="bg-music" src="LAMP MUSIC.mp3" loop></audio>
-  <a-scene embedded arjs>
-    <a-marker preset="custom" type="pattern" url="lamp-image.patt">
-      <a-box position='0 0.5 0' material='color: yellow; opacity: 0.5'></a-box>
-    </a-marker>
-    <a-entity camera></a-entity>
-  </a-scene>
-</body>
+  <head>
+    <title>AR Lamp Glow & Music</title>
+    <meta name="description" content="An Augmented Reality experience for a glowing lamp with background music.">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+
+    <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-ar@latest/dist/aframe-ar.min.js"></script>
+
+    <style>
+      body { margin: 0; overflow: hidden; }
+      /* Optional: Style for a 'start' button to enable audio/video */
+      #startButton {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 9999;
+      }
+      #startButton.hidden {
+        display: none;
+      }
+    </style>
+  </head>
+  <body style="margin: 0; overflow: hidden;">
+
+    <button id="startButton">Tap to Start AR</button>
+
+    <a-scene embedded arjs vr-mode-ui="enabled: false">
+      <a-assets>
+        <video id="lamp-glow-video" src="lamp-glow-video.mp4" preload="auto" loop muted playsinline crossorigin="anonymous"></video>
+        <audio id="bg-music" src="LAMP MUSIC.mp3" preload="auto" loop crossorigin="anonymous"></audio>
+      </a-assets>
+
+      <a-marker type="pattern" url="lamp-marker.patt">
+        <a-video
+          src="#lamp-glow-video"
+          position="0 0 0"       rotation="-90 0 0"    scale="1 1 1"         autoplay="true"       loop="true"
+          playsinline="true"
+          muted="true"          visible="false"       id="arVideo"
+        ></a-video>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const startButton = document.getElementById('startButton');
+        const bgMusic = document.getElementById('bg-music');
+        const arVideo = document.getElementById('arVideo');
+
+        startButton.addEventListener('click', function() {
+          // Attempt to play audio
+          bgMusic.play().then(() => {
+            console.log("Background music started.");
+          }).catch(error => {
+            console.error("Error playing background music:", error);
+            // Fallback for strict autoplay policies
+            alert("Please enable media autoplay in your browser settings if music doesn't play automatically.");
+          });
+
+          // Unmute and play video
+          arVideo.muted = false; // Unmute the video
+          arVideo.play().then(() => {
+            console.log("AR video started.");
+            arVideo.setAttribute('visible', true); // Make video visible after starting
+          }).catch(error => {
+            console.error("Error playing AR video:", error);
+            // Fallback for strict autoplay policies
+            alert("Please enable media autoplay in your browser settings if video doesn't play automatically.");
+          });
+
+          // Hide the start button
+          startButton.classList.add('hidden');
+        }, { once: true }); // Ensure the event listener only fires once
+      });
+    </script>
+  </body>
 </html>
