@@ -3,15 +3,21 @@
   <head>
     <title>AR Lamp Glow & Music</title>
     <meta name="description" content="An Augmented Reality experience for a glowing lamp with background music.">
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no"
+    />
 
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-ar@latest/dist/aframe-ar.min.js"></script>
 
     <style>
-      body { margin: 0; overflow: hidden; }
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
 
       #startButton {
         position: fixed;
@@ -19,7 +25,7 @@
         left: 50%;
         transform: translateX(-50%);
         padding: 10px 20px;
-        background-color: #4CAF50;
+        background-color: #4caf50;
         color: white;
         border: none;
         border-radius: 5px;
@@ -39,37 +45,52 @@
 
     <a-scene embedded arjs vr-mode-ui="enabled: false">
       <a-assets>
-        <img id="lampImage" src="big-lamp.jpg"> <!-- <- update here -->
-        <audio id="bg-music" src="LAMP MUSIC.mp3" preload="auto" loop crossorigin="anonymous"></audio>
+        <img id="lampImage" src="big-lamp.jpg" />
+        <audio
+          id="bg-music"
+          src="LAMP MUSIC.mp3"
+          preload="auto"
+          loop
+          crossorigin="anonymous"
+        ></audio>
       </a-assets>
 
       <a-marker type="pattern" url="lamp-marker.patt">
-        <a-image 
+        <a-image
           src="#lampImage"
           position="0 0 0"
           rotation="-90 0 0"
-          scale="1 1 1">
-        </a-image>
+          scale="1 1 1"
+        ></a-image>
       </a-marker>
 
       <a-entity camera></a-entity>
     </a-scene>
 
     <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const startButton = document.getElementById('startButton');
-        const bgMusic = document.getElementById('bg-music');
+      document.addEventListener("DOMContentLoaded", function () {
+        const startButton = document.getElementById("startButton");
+        const bgMusic = document.getElementById("bg-music");
 
-        startButton.addEventListener('click', function() {
-          bgMusic.play().then(() => {
-            console.log("Background music started.");
-          }).catch(error => {
-            console.error("Error playing background music:", error);
-            alert("Please enable media autoplay in your browser settings if music doesn't play automatically.");
-          });
+        startButton.addEventListener(
+          "click",
+          function () {
+            bgMusic
+              .play()
+              .then(() => {
+                console.log("Background music started.");
+              })
+              .catch((error) => {
+                console.error("Error playing background music:", error);
+                alert(
+                  "Please enable media autoplay in your browser settings if music doesn't play automatically."
+                );
+              });
 
-          startButton.classList.add('hidden');
-        }, { once: true });
+            startButton.classList.add("hidden");
+          },
+          { once: true }
+        );
       });
     </script>
   </body>
