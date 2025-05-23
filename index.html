@@ -5,11 +5,9 @@
     <meta name="description" content="An Augmented Reality experience for a glowing lamp with background music.">
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no"
-    />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no" />
 
+    <!-- A-Frame and AR.js libraries -->
     <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
     <script src="https://unpkg.com/aframe-ar@latest/dist/aframe-ar.min.js"></script>
 
@@ -18,7 +16,6 @@
         margin: 0;
         overflow: hidden;
       }
-
       #startButton {
         position: fixed;
         bottom: 20px;
@@ -33,7 +30,6 @@
         cursor: pointer;
         z-index: 9999;
       }
-
       #startButton.hidden {
         display: none;
       }
@@ -41,32 +37,33 @@
   </head>
 
   <body>
+    <!-- Start Button -->
     <button id="startButton">Tap to Start AR</button>
 
-    <a-scene embedded arjs vr-mode-ui="enabled: false">
+    <!-- AR Scene -->
+    <a-scene embedded arjs vr-mode-ui="enabled: false" renderer="logarithmicDepthBuffer: true;">
+      <!-- Assets -->
       <a-assets>
-        <img id="lampImage" src="big lamp.jpg" />
-        <audio
-          id="bg-music"
-          src="LAMP MUSIC.mp3"
-          preload="auto"
-          loop
-          crossorigin="anonymous"
-        ></audio>
+        <img id="lampImage" src="big-lamp.jpg" crossorigin="anonymous" />
+        <audio id="bg-music" src="LAMP MUSIC.mp3" preload="auto" loop crossorigin="anonymous"></audio>
       </a-assets>
 
+      <!-- Marker -->
       <a-marker type="pattern" url="lamp-marker.patt">
         <a-image
           src="#lampImage"
           position="0 0 0"
           rotation="-90 0 0"
           scale="1 1 1"
+          visible="true"
         ></a-image>
       </a-marker>
 
+      <!-- Camera -->
       <a-entity camera></a-entity>
     </a-scene>
 
+    <!-- Script to Start Music -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const startButton = document.getElementById("startButton");
@@ -82,9 +79,7 @@
               })
               .catch((error) => {
                 console.error("Error playing background music:", error);
-                alert(
-                  "Please enable media autoplay in your browser settings if music doesn't play automatically."
-                );
+                alert("Please enable media autoplay in your browser settings if music doesn't play automatically.");
               });
 
             startButton.classList.add("hidden");
