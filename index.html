@@ -12,7 +12,7 @@
 
     <style>
       body { margin: 0; overflow: hidden; }
-      /* Optional: Style for a 'start' button to enable audio/video */
+
       #startButton {
         position: fixed;
         bottom: 20px;
@@ -27,28 +27,29 @@
         cursor: pointer;
         z-index: 9999;
       }
+
       #startButton.hidden {
         display: none;
       }
     </style>
   </head>
-  <body style="margin: 0; overflow: hidden;">
 
+  <body>
     <button id="startButton">Tap to Start AR</button>
 
     <a-scene embedded arjs vr-mode-ui="enabled: false">
       <a-assets>
-        <video id="lamp-glow-video" src="lamp-glow-video.mp4" preload="auto" loop muted playsinline crossorigin="anonymous"></video>
+        <img id="lampImage" src="big-lamp.jpg"> <!-- <- update here -->
         <audio id="bg-music" src="LAMP MUSIC.mp3" preload="auto" loop crossorigin="anonymous"></audio>
       </a-assets>
 
       <a-marker type="pattern" url="lamp-marker.patt">
-        <a-video
-          src="#lamp-glow-video"
-          position="0 0 0"       rotation="-90 0 0"    scale="1 1 1"         autoplay="true"       loop="true"
-          playsinline="true"
-          muted="true"          visible="false"       id="arVideo"
-        ></a-video>
+        <a-image 
+          src="#lampImage"
+          position="0 0 0"
+          rotation="-90 0 0"
+          scale="1 1 1">
+        </a-image>
       </a-marker>
 
       <a-entity camera></a-entity>
@@ -58,32 +59,17 @@
       document.addEventListener('DOMContentLoaded', function() {
         const startButton = document.getElementById('startButton');
         const bgMusic = document.getElementById('bg-music');
-        const arVideo = document.getElementById('arVideo');
 
         startButton.addEventListener('click', function() {
-          // Attempt to play audio
           bgMusic.play().then(() => {
             console.log("Background music started.");
           }).catch(error => {
             console.error("Error playing background music:", error);
-            // Fallback for strict autoplay policies
             alert("Please enable media autoplay in your browser settings if music doesn't play automatically.");
           });
 
-          // Unmute and play video
-          arVideo.muted = false; // Unmute the video
-          arVideo.play().then(() => {
-            console.log("AR video started.");
-            arVideo.setAttribute('visible', true); // Make video visible after starting
-          }).catch(error => {
-            console.error("Error playing AR video:", error);
-            // Fallback for strict autoplay policies
-            alert("Please enable media autoplay in your browser settings if video doesn't play automatically.");
-          });
-
-          // Hide the start button
           startButton.classList.add('hidden');
-        }, { once: true }); // Ensure the event listener only fires once
+        }, { once: true });
       });
     </script>
   </body>
